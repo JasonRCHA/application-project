@@ -15,22 +15,13 @@ int main() {
     CircularRobot c4(-13.2,  -0.8,  0.5);
 
     // Define rectangular robots
-
-    RectangularRobot r1( -5.0,  5.0, 13.0,  5.5);
-    RectangularRobot r2( 12.5,  7.5, 16.2,  2.0);
-    RectangularRobot r3(-15.5,  6.5, 14.0,  4.0);
-    RectangularRobot r4(  2.5,  4.5,  9.0,  5.0);
-    RectangularRobot r5( -7.5, 20.5,  4.0, 10.0);
-    RectangularRobot r6(-10.0,  4.5,  3.0,  7.0);
-
-    /*
+    
     RectangularRobot r1( -5.0,  5.0,  5.5, 13.0);
     RectangularRobot r2( 12.5,  7.5,  2.0, 16.2);
     RectangularRobot r3(-15.5,  6.5,  4.0, 14.0);
     RectangularRobot r4(  2.5,  4.5,  5.0,  9.0);
     RectangularRobot r5( -7.5, 20.5, 10.0,  4.0);
     RectangularRobot r6(-10.0,  4.5,  7.0,  3.0);
-    */
 
     // Perform collision checks
     printIsColliding("c1", "r2", isColliding(c1, r2)); // CORRECT

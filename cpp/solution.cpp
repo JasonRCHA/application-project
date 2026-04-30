@@ -34,6 +34,9 @@ double getDistance(double x1, double y1, double x2, double y2) {
     return sqrt(distanceX + distanceY);
 }
 
+// Take the combined radius of two circles and compare that value to the distance between the two centers. The only way the distance
+// can be less is if the circles overlap each other and therefore collide.
+
 bool circleOnCircle(const CircularRobot& a, const CircularRobot& b) {
     double distance = getDistance(a, b);
     double combinedRadius = a.getRadius() + b.getRadius();
@@ -46,29 +49,35 @@ bool circleOnCircle(const CircularRobot& a, const CircularRobot& b) {
     }
 }
 
+ 
+// First, the function checks if the center of rectangle B lies within rectangle A. If that flags true, then we know they collide.
+
+// Otherwise, we can check if B's sides are within the bounds of Rectangle A's sides. If one vertical and horizontal side from B lie
+// A, then we can also flag a collision.
+
 bool rectangleOnRectangle(const RectangularRobot& a, const RectangularRobot& b) {
 
     bool xCondition = false;
     bool yCondition = false;
 
-    double a_x1 = a.getCenterX() - (a.getWidth() / 2);
-    double a_x2 = a.getCenterX() + (a.getWidth() / 2);
-    double a_y1 = a.getCenterY() - (a.getLength() / 2);
-    double a_y2 = a.getCenterY() + (a.getLength() / 2);
+    double a_LEFT = a.getCenterX() - (a.getWidth() / 2);
+    double a_RIGHT = a.getCenterX() + (a.getWidth() / 2);
+    double BOTTOM = a.getCenterY() - (a.getLength() / 2);
+    double a_TOP = a.getCenterY() + (a.getLength() / 2);
 
-    double b_x1 = b.getCenterX() - (b.getWidth() / 2);
-    double b_x2 = b.getCenterX() + (b.getWidth() / 2);
-    double b_y1 = b.getCenterY() - (b.getLength() / 2);
-    double b_y2 = b.getCenterY() + (b.getLength() / 2);
+    double b_LEFT = b.getCenterX() - (b.getWidth() / 2);
+    double b_RIGHT = b.getCenterX() + (b.getWidth() / 2);
+    double b_BOTTOM = b.getCenterY() - (b.getLength() / 2);
+    double b_TOP = b.getCenterY() + (b.getLength() / 2);
     
-    if (((b.getCenterX() > a_x1) && (b.getCenterX() < a_x2)) && ((b.getCenterY() > a_y1) && (b.getCenterY() < a_y2))) {
+    if (((b.getCenterX() > a_LEFT) && (b.getCenterX() < a_RIGHT)) && ((b.getCenterY() > BOTTOM) && (b.getCenterY() < a_TOP))) {
         return true;
     } 
 
-    if (((b_x1 > a_x1) && (b_x1 < a_x2)) || ((b_x2 > a_x1) && (b_x2 < a_x2))) {
+    if (((b_LEFT > a_LEFT) && (b_LEFT < a_RIGHT)) || ((b_RIGHT > a_LEFT) && (b_RIGHT < a_RIGHT))) {
         xCondition = true;
     }
-    if (((b_y1 > a_y1) && (b_y1 < a_y2)) || ((b_y2 > a_y1) && (b_y2 < a_y2))) {
+    if (((b_BOTTOM > BOTTOM) && (b_BOTTOM < a_TOP)) || ((b_TOP > BOTTOM) && (b_TOP < a_TOP))) {
         yCondition = true;
     }
     if (xCondition && yCondition) {
@@ -78,28 +87,40 @@ bool rectangleOnRectangle(const RectangularRobot& a, const RectangularRobot& b) 
     }
 }
 
+/* 
+
+First, we check if the circle collides with the corners of the rectangle by comparing the distance between the center of
+the circle to each corner of the rectangle. If any of them are smaller than the radius, we flag true.
+
+Otherwise, give the rectangle an expanded boundary, adding on the radius of the circle to the length and width of the rectangle
+and checking if the circle still lies within the bounds, if yes, we flag for a collision.
+
+The reason check the corners first is because a circle can afford to get closer to a corner of a rectangle before a collision.
+
+*/
+
 bool rectangleOnCircle(const RectangularRobot& a, const CircularRobot& b) {
-    double a_x1 = a.getCenterX() - (a.getWidth() / 2); // LEFT
-    double a_x2 = a.getCenterX() + (a.getWidth() / 2); //RIGHT
-    double a_y1 = a.getCenterY() - (a.getLength() / 2); // BOTTOM
-    double a_y2 = a.getCenterY() + (a.getLength() / 2); // TOP
+    double a_LEFT = a.getCenterX() - (a.getWidth() / 2); // LEFT
+    double a_RIGHT = a.getCenterX() + (a.getWidth() / 2); //RIGHT
+    double a_BOTTOM = a.getCenterY() - (a.getLength() / 2); // BOTTOM
+    double a_TOP = a.getCenterY() + (a.getLength() / 2); // TOP
     
     double shortestDistance;
     double check;
 
-    shortestDistance = getDistance(b.getCenterX(), b.getCenterY(), a_x1, a_y1);
+    shortestDistance = getDistance(b.getCenterX(), b.getCenterY(), a_LEFT, a_BOTTOM);
 
-    check = getDistance(b.getCenterX(), b.getCenterY(), a_x1, a_y2);
+    check = getDistance(b.getCenterX(), b.getCenterY(), a_LEFT, a_TOP);
     if (check < shortestDistance) {
         shortestDistance = check;
     }
 
-    check = getDistance(b.getCenterX(), b.getCenterY(), a_x2, a_y1);
+    check = getDistance(b.getCenterX(), b.getCenterY(), a_RIGHT, a_BOTTOM);
     if (check < shortestDistance) {
         shortestDistance = check;
     }
 
-    check = getDistance(b.getCenterX(), b.getCenterY(), a_x2, a_y2);
+    check = getDistance(b.getCenterX(), b.getCenterY(), a_RIGHT, a_TOP);
     if (check < shortestDistance) {
         shortestDistance = check;
     }
@@ -108,7 +129,7 @@ bool rectangleOnCircle(const RectangularRobot& a, const CircularRobot& b) {
         return true;
     }
 
-    if (((b.getCenterX() > a_x1-b.getRadius()) && (b.getCenterX() < a_x2+b.getRadius())) && ((b.getCenterY() > a_y1-b.getRadius()) && (b.getCenterY() < a_y2+b.getRadius()))) {
+    if (((b.getCenterX() > a_LEFT-b.getRadius()) && (b.getCenterX() < a_RIGHT+b.getRadius())) && ((b.getCenterY() > a_BOTTOM-b.getRadius()) && (b.getCenterY() < a_TOP+b.getRadius()))) {
         return true;
     }
     return false;
@@ -119,16 +140,16 @@ bool isColliding (const Robot& a, const Robot& b) {
     auto typeB = b.getType();
     
     if (typeA > typeB) { // This makes it so that the highest value will always be second in the map
-        auto it = collisionType.find({typeB, typeA});
-            if (it != collisionType.end()) {
-            return it->second(b, a);   
+        auto selector = collisionType.find({typeB, typeA});
+            if (selector != collisionType.end()) {
+            return selector->second(b, a);   
             }
 
     }
     else {
-        auto it = collisionType.find({typeA, typeB});
-            if (it != collisionType.end()) {
-            return it->second(a, b);   
+        auto selector = collisionType.find({typeA, typeB});
+            if (selector != collisionType.end()) {
+            return selector->second(a, b);   
             }
     }
 

@@ -15,7 +15,7 @@ class Robot {
     public:
 
         // robotType is an enum set used to run a quick check on subclass type without having to specifically compare pointers
-        // Each subclass gets its own int, and will be constant once constructed 
+        // Each subclass gets its own int, and will be constant once constructed, if you're adding more shapes, expand enum
         enum class robotType {
             NONE = 0,
             RECTANGLE = 1,
@@ -89,13 +89,13 @@ class RectangularRobot : public Robot {
 
 */
 
-double getDistance(const Robot& a, const Robot& b);
+double getDistance(const Robot& a, const Robot& b); // This version grabs the distance between the center of two robots, rather than two generic points
 double getDistance(double x1, double y1, double x2, double y2);
 
 bool isColliding(const Robot& a, const Robot& b); // The big daddy itself
 
-
-    // Math functions
-    bool circleOnCircle(const CircularRobot& a, const CircularRobot& b); 
-    bool rectangleOnRectangle(const RectangularRobot& a, const RectangularRobot& b);
-    bool rectangleOnCircle(const RectangularRobot& a, const CircularRobot& b);
+// Math functions for each unique type of collision, if you're adding more shapes, add unique collisions here.
+// Unique descriptions and walkthroughs for each function lies in the solution.cpp file
+bool circleOnCircle(const CircularRobot& a, const CircularRobot& b); 
+bool rectangleOnRectangle(const RectangularRobot& a, const RectangularRobot& b);
+bool rectangleOnCircle(const RectangularRobot& a, const CircularRobot& b);
