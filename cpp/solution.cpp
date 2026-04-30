@@ -26,12 +26,20 @@ double getDistance(const Robot& a, const Robot& b) {
     return sqrt(distanceX + distanceY);     
 }
 
+double getDistance(double x1, double y1, double x2, double y2) {
+    double distanceX = x2 - x1;
+    double distanceY = y2 - y1;
+    distanceX = distanceX * distanceX;
+    distanceY = distanceY * distanceY;
+    return sqrt(distanceX + distanceY);
+}
+
 bool circleOnCircle(const CircularRobot& a, const CircularRobot& b) {
     double distance = getDistance(a, b);
     double combinedRadius = a.getRadius() + b.getRadius();
 
     if (combinedRadius > distance) {
-        return true;
+        return true;        
     }
     else {
         return false;
@@ -52,6 +60,10 @@ bool rectangleOnRectangle(const RectangularRobot& a, const RectangularRobot& b) 
     double b_x2 = b.getCenterX() + (b.getWidth() / 2);
     double b_y1 = b.getCenterY() - (b.getLength() / 2);
     double b_y2 = b.getCenterY() + (b.getLength() / 2);
+    
+    if (((b.getCenterX() > a_x1) && (b.getCenterX() < a_x2)) && ((b.getCenterY() > a_y1) && (b.getCenterY() < a_y2))) {
+        return true;
+    } 
 
     if (((b_x1 > a_x1) && (b_x1 < a_x2)) || ((b_x2 > a_x1) && (b_x2 < a_x2))) {
         xCondition = true;
@@ -67,6 +79,38 @@ bool rectangleOnRectangle(const RectangularRobot& a, const RectangularRobot& b) 
 }
 
 bool rectangleOnCircle(const RectangularRobot& a, const CircularRobot& b) {
+    double a_x1 = a.getCenterX() - (a.getWidth() / 2); // LEFT
+    double a_x2 = a.getCenterX() + (a.getWidth() / 2); //RIGHT
+    double a_y1 = a.getCenterY() - (a.getLength() / 2); // BOTTOM
+    double a_y2 = a.getCenterY() + (a.getLength() / 2); // TOP
+    
+    double shortestDistance;
+    double check;
+
+    shortestDistance = getDistance(b.getCenterX(), b.getCenterY(), a_x1, a_y1);
+
+    check = getDistance(b.getCenterX(), b.getCenterY(), a_x1, a_y2);
+    if (check < shortestDistance) {
+        shortestDistance = check;
+    }
+
+    check = getDistance(b.getCenterX(), b.getCenterY(), a_x2, a_y1);
+    if (check < shortestDistance) {
+        shortestDistance = check;
+    }
+
+    check = getDistance(b.getCenterX(), b.getCenterY(), a_x2, a_y2);
+    if (check < shortestDistance) {
+        shortestDistance = check;
+    }
+
+    if (shortestDistance < b.getRadius()) {
+        return true;
+    }
+
+    if (((b.getCenterX() > a_x1-b.getRadius()) && (b.getCenterX() < a_x2+b.getRadius())) && ((b.getCenterY() > a_y1-b.getRadius()) && (b.getCenterY() < a_y2+b.getRadius()))) {
+        return true;
+    }
     return false;
 }
 

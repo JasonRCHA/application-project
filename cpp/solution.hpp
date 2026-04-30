@@ -6,6 +6,7 @@
 #include <functional>
 #include <utility>
 #include <cmath>
+#include <iostream>
 
 // --------------- Robot Main Class ---------------
 
@@ -66,7 +67,7 @@ class RectangularRobot : public Robot {
         double length;
         double width;
 
-    public: RectangularRobot(double x, double y, double l, double w) : Robot(x, y, robotType::RECTANGLE), length(l), width(w) {}
+    public: RectangularRobot(double x, double y, double l, double w) : Robot(x, y, robotType::RECTANGLE), width(w), length(l) {}
 
     double getLength() const {
         return length;
@@ -89,11 +90,10 @@ class RectangularRobot : public Robot {
 */
 
 double getDistance(const Robot& a, const Robot& b);
+double getDistance(double x1, double y1, double x2, double y2);
 
 bool isColliding(const Robot& a, const Robot& b); // The big daddy itself
 
-// Function map
-std::map<std::pair<Robot::robotType, Robot::robotType>, std::function<bool(const Robot&, const Robot&)>> collisionType = {}; 
 
     // Math functions
     bool circleOnCircle(const CircularRobot& a, const CircularRobot& b); 
