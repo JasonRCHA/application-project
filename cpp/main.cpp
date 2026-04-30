@@ -1,6 +1,5 @@
 #include "solution.hpp" // modify solution.hpp to include everything necessary
 
-#include <string>
 #include <cstdio>
 using std::string;
 
