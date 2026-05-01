@@ -151,11 +151,11 @@ bool rectangleOnCircle(const RectangularRobot& a, const CircularRobot& b) {
     // std::cout<<shortestDistance<<" "<<b.getRadius()<<std::endl;
 
     if (shortestDistance < b.getRadius()) {
-        std::cout<<"THE CORNER COLLISION WAS FLAGGED."<<std::endl;
+        // std::cout<<"THE CORNER COLLISION WAS FLAGGED."<<std::endl;
         return true;
     }
 
-    if (((b.getCenterX() > a_LEFT) && (b.getCenterX() < a_RIGHT)) && ((b.getCenterY() > a_BOTTOM) && (b.getCenterY() < a_TOP))) {
+    if (((b.getCenterX() > a_LEFT) && (b.getCenterX() < a_RIGHT)) || ((b.getCenterY() > a_BOTTOM) && (b.getCenterY() < a_TOP))) {
         if (((b.getCenterX() > a_LEFT-b.getRadius()) && (b.getCenterX() < a_RIGHT+b.getRadius())) && ((b.getCenterY() > a_BOTTOM-b.getRadius()) && (b.getCenterY() < a_TOP+b.getRadius()))) {
             std::cout<<"THE SIDE COLLISION WAS FLAGGED."<<std::endl;
             return true;
