@@ -67,7 +67,7 @@ class RectangularRobot : public Robot {
         double length;
         double width;
 
-    public: RectangularRobot(double x, double y, double l, double w) : Robot(x, y, robotType::RECTANGLE), width(w), length(l) {}
+    public: RectangularRobot(double x, double y, double w, double l) : Robot(x, y, robotType::RECTANGLE), width(w), length(l) {}
 
     double getLength() const {
         return length;

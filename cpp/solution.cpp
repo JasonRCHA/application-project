@@ -19,7 +19,7 @@ std::map<std::pair<RT, RT>, std::function<bool(const Robot&, const Robot&)>> col
 };
 
 double getDistance(const Robot& a, const Robot& b) {
-    double distanceX = b.getCenterX() - a.getCenterY();
+    double distanceX = b.getCenterX() - a.getCenterX();
     double distanceY = b.getCenterY() - a.getCenterY();
     distanceX = distanceX * distanceX;
     distanceY = distanceY * distanceY;
@@ -104,33 +104,62 @@ bool rectangleOnCircle(const RectangularRobot& a, const CircularRobot& b) {
     double a_RIGHT = a.getCenterX() + (a.getWidth() / 2); //RIGHT
     double a_BOTTOM = a.getCenterY() - (a.getLength() / 2); // BOTTOM
     double a_TOP = a.getCenterY() + (a.getLength() / 2); // TOP
+
+    // std::cout<<"WIDTH: "<<a.getWidth()<<std::endl;
+    // std::cout<<"LENGTH: "<<a.getLength()<<std::endl;
+
+    // std::cout<<a_LEFT<<std::endl;
+    // std::cout<<a_RIGHT<<std::endl;
+    // std::cout<<a_BOTTOM<<std::endl;
+    // std::cout<<a_TOP<<std::endl;
     
     double shortestDistance;
     double check;
 
     shortestDistance = getDistance(b.getCenterX(), b.getCenterY(), a_LEFT, a_BOTTOM);
 
+    // std::cout<<"CHECK START "<<shortestDistance<<std::endl;
+
     check = getDistance(b.getCenterX(), b.getCenterY(), a_LEFT, a_TOP);
     if (check < shortestDistance) {
         shortestDistance = check;
     }
 
-    check = getDistance(b.getCenterX(), b.getCenterY(), a_RIGHT, a_BOTTOM);
+    // std::cout<<"CHECK 2 "<<shortestDistance<<std::endl;
+
+    check = getDistance(b.getCenterX(), b.getCenterY(), a_RIGHT, a_BOTTOM); // HERE
+
+    // std::cout<<b.getCenterX()<<std::endl;
+    // std::cout<<b.getCenterY()<<std::endl;
+    // std::cout<<a_RIGHT<<std::endl;
+    // std::cout<<a_BOTTOM<<std::endl;
+
     if (check < shortestDistance) {
         shortestDistance = check;
     }
+
+    // std::cout<<"CHECK 3 "<<shortestDistance<<std::endl;
 
     check = getDistance(b.getCenterX(), b.getCenterY(), a_RIGHT, a_TOP);
+
     if (check < shortestDistance) {
         shortestDistance = check;
     }
 
+    // std::cout<<"CHECK 4 "<<shortestDistance<<std::endl;
+
+    // std::cout<<shortestDistance<<" "<<b.getRadius()<<std::endl;
+
     if (shortestDistance < b.getRadius()) {
+        std::cout<<"THE CORNER COLLISION WAS FLAGGED."<<std::endl;
         return true;
     }
 
-    if (((b.getCenterX() > a_LEFT-b.getRadius()) && (b.getCenterX() < a_RIGHT+b.getRadius())) && ((b.getCenterY() > a_BOTTOM-b.getRadius()) && (b.getCenterY() < a_TOP+b.getRadius()))) {
-        return true;
+    if (((b.getCenterX() > a_LEFT) && (b.getCenterX() < a_RIGHT)) && ((b.getCenterY() > a_BOTTOM) && (b.getCenterY() < a_TOP))) {
+        if (((b.getCenterX() > a_LEFT-b.getRadius()) && (b.getCenterX() < a_RIGHT+b.getRadius())) && ((b.getCenterY() > a_BOTTOM-b.getRadius()) && (b.getCenterY() < a_TOP+b.getRadius()))) {
+            std::cout<<"THE SIDE COLLISION WAS FLAGGED."<<std::endl;
+            return true;
+        }
     }
     return false;
 }
